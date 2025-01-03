@@ -48,7 +48,6 @@ form_html = '''
                 background-color: #f4f4f4;
                 border-radius: 15px;
                 padding: 40px;
-                max-width: 350px;
                 animation: gradientBG 5s ease infinite; 
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
                 border-radius: 30px;
