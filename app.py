@@ -41,12 +41,14 @@ form_html = '''
             }
             
             .container {
+                max-width: 800px;
                 background: linear-gradient(135deg, #30343F, #404452);
                 backdrop-filter: blur(12px);
                 margin: 50px auto;
                 background-color: #f4f4f4;
                 border-radius: 15px;
                 padding: 40px;
+                
                 animation: gradientBG 5s ease infinite; 
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
                 border-radius: 30px;
@@ -85,7 +87,6 @@ form_html = '''
             input[type="text"], input[type="number"], select {
                 padding: 10px;
                 width: 100%;
-                max-width: 320px;
                 margin-bottom: 18px;
                 border-radius: 5px;
                 border: 1px solid #ccc;
@@ -129,9 +130,11 @@ form_html = '''
                 margin-bottom: 15px;
             }
             select {
-                width: 120%;
-                padding: 10px;
-                max-width: 350px;
+                width: 100%;
+                max-width: 420px;
+                margin-bottom: 15px;
+                
+                
             }
         </style>
     </head>
