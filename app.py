@@ -22,49 +22,83 @@ form_html = '''
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background: linear-gradient(135deg, #6e7fd5, #b8c1ec);
+                background:linear-gradient(135deg, #ff7eb3, #ff758c, #fdb15c, #ffde59, #a7ff83, #17c3b2, #2d6cdf, #7c5cdb);
+                background-size: 300% 300%;
+                animation: gradientBG 10s ease infinite; 
                 margin: 0;
                 padding: 0;
-                color: #333;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              
             }
+            
+            @keyframes gradientBG {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            
             .container {
-                max-width: 800px;
+                max-width: 300px;
+                background: linear-gradient(135deg, #30343F, #404452);
+                backdrop-filter: blur(12px);
                 margin: 50px auto;
                 background-color: #f4f4f4;
-                border-radius: 10px;
+                border-radius: 15px;
                 padding: 40px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                max-width: 350px;
+                animation: gradientBG 5s ease infinite; 
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+                border-radius: 30px;
+                background-size: 200% 200%;
             }
+            
+            @keyframes containerGradient {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }                
+              
+            .container:hover{
+              color: linear-gradient(135deg, #ff7eb3, #ff758c, #fdb15c, #ffde59, #a7ff83, #17c3b2, #2d6cdf, #7c5cdb);
+              animation: gradientBG 10s ease infinite;
+            }
+            
             h1 {
                 text-align: center;
                 font-size: 2.5rem;
                 margin-bottom: 30px;
-                color: #4a4a4a;
+                color: white
             }
             form {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 20px;
+                color: white
             }
+          
             label {
                 font-size: 18px;
-                color: #555;
+                color:white;
             }
             input[type="text"], input[type="number"], select {
                 padding: 10px;
                 width: 100%;
-                max-width: 350px;
+                max-width: 320px;
+                margin-bottom: 18px;
                 border-radius: 5px;
                 border: 1px solid #ccc;
                 background-color: #fff;
-                color: #333;
+                color: linear-gradient(135deg, #2e323d, #3a3e4a);
                 font-size: 16px;
                 outline: none;
                 transition: border-color 0.3s ease-in-out;
             }
             input[type="text"]:focus, input[type="number"]:focus, select:focus {
-                border-color: #4CAF50;
+                border-color: linear-gradient(135deg, #383c48, #464a56);
             }
             input[type="submit"] {
                 background-color: #4CAF50;
@@ -74,22 +108,22 @@ form_html = '''
                 border-radius: 5px;
                 font-size: 18px;
                 cursor: pointer;
-                transition: background-color 0.3s ease-in-out;
+                transition: background-color 0.1s ease-in-out;
             }
             input[type="submit"]:hover {
-                background-color: #45a049;
+                background-color: orange;
             }
             a {
                 text-decoration: none;
                 color: #4CAF50;
-                text-align: center;
+                text-align: left;
                 display: block;
                 margin-top: 20px;
                 font-size: 18px;
-                transition: color 0.3s ease-in-out;
+                transition: color 0.1s ease-in-out;
             }
             a:hover {
-                color: #fff;
+                color: orange;
             }
             .field-group {
                 width: 100%;
@@ -97,8 +131,9 @@ form_html = '''
                 margin-bottom: 15px;
             }
             select {
-                width: 100%;
+                width: 120%;
                 padding: 10px;
+                max-width: 350px;
             }
         </style>
     </head>
@@ -153,9 +188,7 @@ form_html = '''
             });
         </script>
     </body>
-    </html>
-'''
-
+    </html>'''
 # HTML Template for displaying inventory with updated colors
 inventory_html = '''
     <html>
