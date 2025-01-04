@@ -216,7 +216,7 @@ inventory_html = '''
             }
             
             .container {
-                max-width: 1200px;
+                max-width: 1500px;
                 background: linear-gradient(135deg, #30343F, #404452);
                 backdrop-filter: blur(12px);
                 margin: 50px auto;
@@ -257,9 +257,6 @@ inventory_html = '''
                 background-color: #333;
                 color: white;
                 font-size: 18px;
-            }
-            .inventory-table tr:nth-child(even) {
-                background-color: #f9f9f9;
             }
             .inventory-table tr:hover {
                 background-color: #e0e0e0;
