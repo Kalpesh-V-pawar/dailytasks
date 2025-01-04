@@ -251,6 +251,7 @@ inventory_html = '''
                 border: 1px solid #ddd;
                 text-align: center;
                 vertical-align: middle;
+                color: #555;
               
             }
             .inventory-table th {
@@ -267,6 +268,10 @@ inventory_html = '''
             .inventory-table tr {
                 background-color: #f9f9f9;
                 color: black;
+            }
+            
+            .inventory-table tr:hover {
+              background-color : #e0e0e0 ;
             }
             
             a {
