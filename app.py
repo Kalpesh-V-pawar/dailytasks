@@ -197,19 +197,45 @@ inventory_html = '''
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background: linear-gradient(135deg, #6e7fd5, #b8c1ec); /* Updated gradient */
+                background:linear-gradient(135deg, #ff7eb3, #ff758c, #fdb15c, #ffde59, #a7ff83, #17c3b2, #2d6cdf, #7c5cdb);
+                background-size: 300% 300%;
+                animation: gradientBG 10s ease infinite; 
                 margin: 0;
                 padding: 0;
-                color: #333;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              
             }
+            
+            @keyframes gradientBG {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            
             .container {
                 max-width: 800px;
+                background: linear-gradient(135deg, #30343F, #404452);
+                backdrop-filter: blur(12px);
                 margin: 50px auto;
                 background-color: #f4f4f4;
-                border-radius: 10px;
+                border-radius: 15px;
                 padding: 40px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                
+                animation: gradientBG 5s ease infinite; 
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+                border-radius: 30px;
+                background-size: 200% 200%;
             }
+            
+            @keyframes containerGradient {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            
             h1 {
                 text-align: center;
                 font-size: 2.5rem;
@@ -224,6 +250,7 @@ inventory_html = '''
                 padding: 15px;
                 border: 1px solid #ddd;
                 text-align: center;
+                vertical-align: middle;
                 color: #555;
             }
             .inventory-table th {
@@ -247,12 +274,13 @@ inventory_html = '''
                 color: #4CAF50;
                 display: block;
                 text-align: center;
-                margin-top: 20px;
+                margin-top: 5px;
                 font-size: 18px;
                 transition: color 0.3s ease-in-out;
+                
             }
             a:hover {
-                color: #fff;
+                color: orange;
             }
         </style>
     </head>
@@ -278,6 +306,7 @@ inventory_html = '''
         </div>
     </body>
     </html>
+
 '''
 
 # HTML Template for displaying transaction history
