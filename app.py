@@ -216,7 +216,7 @@ inventory_html = '''
             }
             
             .container {
-                max-width: 1500px;
+                max-width: 1400px;
                 background: linear-gradient(135deg, #30343F, #404452);
                 backdrop-filter: blur(12px);
                 margin: 50px auto;
@@ -251,21 +251,24 @@ inventory_html = '''
                 border: 1px solid #ddd;
                 text-align: center;
                 vertical-align: middle;
-                color: #555;
+              
             }
             .inventory-table th {
                 background-color: #333;
                 color: white;
                 font-size: 18px;
             }
-            .inventory-table tr:hover {
-                background-color: #e0e0e0;
-                transform: translateY(-2px);
-                transition: background-color 0.3s, transform 0.3s;
-            }
+            
+            
             .inventory-table td {
                 font-size: 16px;
             }
+            
+            .inventory-table tr {
+                background-color: #f9f9f9;
+                color: black;
+            }
+            
             a {
                 text-decoration: none;
                 color: #4CAF50;
@@ -303,7 +306,6 @@ inventory_html = '''
         </div>
     </body>
     </html>
-
 '''
 
 # HTML Template for displaying transaction history
