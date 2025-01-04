@@ -295,13 +295,17 @@ inventory_html = '''
             <table class="inventory-table">
                 <tr>
                     <th>Item Name</th>
-                    <th>Quantity</th>
+                    <th>Total Quantity</th>
+                    <th>Used Quantity</th>
+                    <th>Remaining Quantity</th>
                     <th>Last Updated</th>
                 </tr>
                 {% for item in items %}
                 <tr>
                     <td><a href="/transactions/{{ item['item_name'] }}">{{ item['item_name'] }}</a></td>
                     <td>{{ item['quantity'] }}</td>
+                    <td>{{ "test" }}</td>
+                    <td>{{ "test" }}</td>
                     <td>{{ item['last_updated'] }}</td>
                 </tr>
                 {% endfor %}
