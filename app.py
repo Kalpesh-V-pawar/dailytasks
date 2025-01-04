@@ -216,7 +216,7 @@ inventory_html = '''
             }
             
             .container {
-                max-width: 800px;
+                max-width: 1200px;
                 background: linear-gradient(135deg, #30343F, #404452);
                 backdrop-filter: blur(12px);
                 margin: 50px auto;
