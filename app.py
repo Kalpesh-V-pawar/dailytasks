@@ -1,5 +1,6 @@
 import sys
 sys.path.append(r'C:\users\kalpe\appData\roaming\python\python312\site-packages')
+import os
 from flask import Flask, request, jsonify, render_template_string
 from pymongo import MongoClient
 from datetime import datetime
@@ -8,7 +9,12 @@ import uuid
 app = Flask(__name__)
 
 # MongoDB Atlas connection string
-client = MongoClient("mongodb+srv://Kalpeshpawar:01042001@cluster0.ozahk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongo_uri = os.getenv("MONGO_URI")  
+if not mongo_uri:
+    raise ValueError("MONGO_URI environment variable is not set!")
+
+# MongoDB setup
+client = MongoClient(mongo_uri)
 
 # Select your database and collection
 db = client["inventory_db"]
