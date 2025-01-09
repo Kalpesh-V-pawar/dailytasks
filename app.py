@@ -1,7 +1,4 @@
-import sys
-sys.path.append(r'C:\users\kalpe\appData\roaming\python\python312\site-packages')
-import os
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template_string, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime
 import uuid
@@ -9,17 +6,162 @@ import uuid
 app = Flask(__name__)
 
 # MongoDB Atlas connection string
-mongo_uri = os.getenv("MONGO_URI")  
-if not mongo_uri:
-    raise ValueError("MONGO_URI environment variable is not set!")
-
-# MongoDB setup
+mongo_uri = os.getenv("MONGO_URI") 
 client = MongoClient(mongo_uri)
 
 # Select your database and collection
 db = client["inventory_db"]
 inventory_collection = db["inventory"]
 transactions_collection = db["transactions"]
+users_collection = db['users']
+
+
+
+logged_in_user = None
+
+
+LOGIN_PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c, #fdb15c, #ffde59, #a7ff83, #17c3b2, #2d6cdf, #7c5cdb);
+            background-size: 300% 300%;
+            animation: gradientBG 10s ease infinite;
+            color: #ffffff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%; /* Ensures responsiveness */
+            background : linear-gradient(135deg, #30343F, #404452);
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Adds depth */
+            color: white;
+            min-height : 400px
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+      
+        h1, h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            color: white
+        }
+
+        select, input {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: orange;
+        }
+
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .success {
+            color: #28a745;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form method="POST">
+            <label for="username">Select Username:</label>
+            <select id="username" name="username" required>
+                <option value="" selected disabled>Select User</option>
+                <!-- Regular Users Section -->
+                <optgroup label="Users">
+                    {% for user in users %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </optgroup>
+
+                <!-- Admins Section -->
+                <optgroup label="Admins">
+                    {% for admin in admins %}
+                        <option value="{{ admin }}">{{ admin }}</option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            
+            <button type="submit">Login</button>
+        </form>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+"""
+
 
 # Updated form HTML with reason field
 form_html = '''
@@ -402,6 +544,51 @@ transaction_html = '''
 '''
 
 
+@app.route("/", methods=["GET", "POST"])
+def login():
+    users = {}
+    admins = {}
+
+    # Fetch users from MongoDB
+    user_data = users_collection.find({"role": "user"}, {"_id": 0, "username": 1, "password": 1})
+    for user in user_data:
+        users[user["username"]] = {"password": user["password"], "role": "user"}
+
+    # Fetch admins from MongoDB
+    admin_data = users_collection.find({"role": "admin"}, {"_id": 0, "username": 1, "password": 1})
+    for admin in admin_data:
+        admins[admin["username"]] = {"password": admin["password"], "role": "admin"}
+
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Check if username is in users or admins
+        if username in users and users[username]["password"] == password:
+            # Redirect based on the role
+            if users[username]["role"] == "admin":
+                return redirect(url_for("admin_dashboard"))
+            else:
+                return redirect(url_for("user_dashboard"))
+        elif username in admins and admins[username]["password"] == password:
+            # Admin login
+            return redirect(url_for("admin_dashboard"))
+        else:
+            error = "Invalid username or password. Please try again."
+            return render_template_string(LOGIN_PAGE, error=error, users=users.keys(), admins=admins.keys())
+
+    return render_template_string(LOGIN_PAGE, users=users.keys(), admins=admins.keys())
+
+
+# User Dashboard route
+@app.route("/user_dashboard")
+def user_dashboard():
+    return render_template_string(form_html)
+
+@app.route("/admin_dashboard")
+def admin_dashboard():
+    return render_template_string(LOGIN_PAGE)
+
 def record_transaction(item_name, quantity_changed, reason):
     """Helper function to record transactions"""
     transaction = {
@@ -413,9 +600,11 @@ def record_transaction(item_name, quantity_changed, reason):
     }
     transactions_collection.insert_one(transaction)
 
-@app.route('/')
-def main():
-    return render_template_string(form_html)
+
+
+#@app.route('/')
+#def main():
+   #return render_template_string(form_html)
 
 @app.route('/add', methods=['POST'])
 def add_item():
