@@ -444,17 +444,17 @@ inventory_html = '''
             <table class="inventory-table">
                 <tr>
                     <th>Item Name</th>
-                    <th>Total Quantity</th>
-                    <th>Used Quantity</th>
                     <th>Remaining Quantity</th>
+                    <th>Total Quantity</th>
+                    <th>Used1 Quantity</th>
                     <th>Last Updated</th>
                 </tr>
                 {% for item in items %}
                 <tr>
                     <td><a href="/transactions/{{ item['item_name'] }}">{{ item['item_name'] }}</a></td>
                     <td>{{ item['quantity'] }}</td>
-                    <td>{{ "test" }}</td>
-                    <td>{{ "test" }}</td>
+                    <td>{{ item['Total'] }}</td>
+                    <td>{{ item['used_quantity'] }}</td>
                     <td>{{ item['last_updated'] }}</td>
                 </tr>
                 {% endfor %}
@@ -624,12 +624,27 @@ def add_item():
     # Check if the item exists in the inventory
     existing_item = inventory_collection.find_one({"item_name": item_name})
 
+
     if existing_item:
         # If the item exists, update the quantity
+        total_qty = None
         new_quantity = existing_item['quantity'] + quantity
+        if quantity >= 1 :
+            if total_qty is not None :
+                total_qty = existing_item['Total'] + quantity
+            else :
+                total_qty = new_quantity   
+        else :
+            if total_qty is not None :
+                total_qty = existing_item['Total']
+            else :
+                total_qty = existing_item['quantity']    
+        used_quantity = total_qty - new_quantity
+
+
         inventory_collection.update_one(
             {"item_name": item_name},
-            {"$set": {"quantity": new_quantity, "last_updated": last_updated}}
+            {"$set": {"quantity": new_quantity, "last_updated": last_updated, "Total": total_qty, "used_quantity": used_quantity }}
         )
         # Record transaction for update
         record_transaction(
@@ -642,7 +657,9 @@ def add_item():
         inventory_collection.insert_one({
             "item_name": item_name,
             "quantity": quantity,
-            "last_updated": last_updated
+            "last_updated": last_updated,
+            "Total" : quantity,
+            "used_quantity" : 0
         })
         # Record transaction for new item
         record_transaction(
