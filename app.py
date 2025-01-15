@@ -329,6 +329,7 @@ form_html = '''
                         <option value="Central India">Central India</option>
                         <option value="South I">South I</option>
                         <option value="South II">South II</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
