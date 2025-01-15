@@ -318,6 +318,20 @@ form_html = '''
                     <input type="text" id="other_reason" name="other_reason">
                 </div>
                 
+                <div class="field-group">
+                    <label for="region">Reason:</label>
+                    <select id="region" name="region" required>
+                        <option value="">Select a region</option>
+                        <option value="North I">North I</option>
+                        <option value="North II">North II</option>
+                        <option value="West I">West I</option>
+                        <option value="West II">West II</option>
+                        <option value="Central India">Central India</option>
+                        <option value="South I">South I</option>
+                        <option value="South II">South II</option>
+                    </select>
+                </div>
+
                 <input type="submit" value="Add Item">
             </form>
             <p>Use the form above to add inventory. You can also check inventory status via Postman or cURL.</p>
