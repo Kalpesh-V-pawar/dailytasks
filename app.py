@@ -319,7 +319,7 @@ form_html = '''
                 </div>
                 
                 <div class="field-group">
-                    <label for="region">Reason:</label>
+                    <label for="region">Region:</label>
                     <select id="region" name="region" required>
                         <option value="">Select a region</option>
                         <option value="North I">North I</option>
@@ -541,6 +541,8 @@ transaction_html = '''
                     <th>Date</th>
                     <th>Quantity Changed</th>
                     <th>Reason</th>
+                    <th>Region</th>
+
                 </tr>
                 {% for transaction in transactions %}
                 <tr>
@@ -548,6 +550,7 @@ transaction_html = '''
                     <td>{{ transaction['date'] }}</td>
                     <td>{{ transaction['quantity_changed'] }}</td>
                     <td>{{ transaction['reason'] }}</td>
+                    <td>{{ transaction['region'] }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -604,14 +607,15 @@ def user_dashboard():
 def admin_dashboard():
     return render_template_string(LOGIN_PAGE)
 
-def record_transaction(item_name, quantity_changed, reason):
+def record_transaction(item_name, quantity_changed, reason, region):
     """Helper function to record transactions"""
     transaction = {
         "transaction_id": str(uuid.uuid4()),
         "item_name": item_name,
         "date": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         "quantity_changed": quantity_changed,
-        "reason": reason
+        "reason": reason,
+        "region" : region
     }
     transactions_collection.insert_one(transaction)
 
@@ -626,6 +630,7 @@ def add_item():
     item_name = request.form.get('item_name')
     quantity = int(request.form.get('quantity'))
     reason = request.form.get('reason')
+    region = request.form.get('region')
     
     # Handle "Other" reason
     if reason == "Other":
@@ -658,13 +663,14 @@ def add_item():
 
         inventory_collection.update_one(
             {"item_name": item_name},
-            {"$set": {"quantity": new_quantity, "last_updated": last_updated, "Total": total_qty, "used_quantity": used_quantity }}
+            {"$set": {"quantity": new_quantity, "last_updated": last_updated, "Total": total_qty, "used_quantity": used_quantity, "region": region }}
         )
         # Record transaction for update
         record_transaction(
             item_name=item_name,
             quantity_changed=quantity,
-            reason=reason
+            reason=reason,
+            region=region
         )
     else:
         # If the item doesn't exist, insert it as a new record
@@ -673,13 +679,15 @@ def add_item():
             "quantity": quantity,
             "last_updated": last_updated,
             "Total" : quantity,
-            "used_quantity" : 0
+            "used_quantity" : 0,
+            "region" : region
         })
         # Record transaction for new item
         record_transaction(
             item_name=item_name,
             quantity_changed=quantity,
-            reason=reason
+            reason=reason,
+            region=region
         )
 
     return render_template_string(form_html)
